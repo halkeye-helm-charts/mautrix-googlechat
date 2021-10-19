@@ -47,27 +47,6 @@ spec:
       dnsConfig:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
       {{- end }}
-      initContainers:
-        - name: init
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/bin/sh"]
-          args:
-            - "-c"
-            - |-
-              set -ex
-              cp /config/*.yaml /data/
-          volumeMounts:
-            - name: data
-              mountPath: /data
-            - name: logs
-              mountPath: /logs
-            - name: config
-              mountPath: /config
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -79,7 +58,7 @@ spec:
             - -m
             - mautrix_googlechat
             - -c
-            - /data/config.yaml
+            - /config/config.yaml
           ports:
             - name: http
               containerPort: {{ required "need config.appservice.port" .Values.config.appservice.port }}
@@ -113,7 +92,7 @@ spec:
             - name: data
               mountPath: /data
             - name: config
-              mountPath: /data
+              mountPath: /config
             - name: logs
               mountPath: /logs
       {{- with .Values.nodeSelector }}

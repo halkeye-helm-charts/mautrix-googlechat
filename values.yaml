@@ -32,11 +32,11 @@ podSecurityContext:
 securityContext:
   runAsUser: 1000
   runAsGroup: 1000
-  # readOnlyRootFilesystem: true
   # privileged: true
   # capabilities:
   #   drop:
   #   - ALL
+  # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
 
