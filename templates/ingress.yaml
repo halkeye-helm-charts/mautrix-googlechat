@@ -1,6 +1,6 @@
 {{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion .Values.kubeTargetVersionOverride }}
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "mautrix-hangouts.fullname" . -}}
+{{- $fullName := include "mautrix-googlechat.fullname" . -}}
 {{- if semverCompare ">=1.19-0" $kubeTargetVersion -}}
 apiVersion: networking.k8s.io/v1
 {{- else if semverCompare ">=1.14-0" $kubeTargetVersion -}}
@@ -12,7 +12,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-{{ include "mautrix-hangouts.labels" . | indent 4 }}
+{{ include "mautrix-googlechat.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

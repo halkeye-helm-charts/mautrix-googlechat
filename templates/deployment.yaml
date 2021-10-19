@@ -4,7 +4,7 @@ apiVersion: apps/v1
 {{- $podAnnotations := merge $podAnnotations $secretAnnotation }}
 kind: Deployment
 metadata:
-  name: {{ include "mautrix-hangouts.fullname" . }}
+  name: {{ include "mautrix-googlechat.fullname" . }}
   {{- if .Values.deploymentAnnotations }}
   annotations:
     {{- range $key, $value := .Values.deploymentAnnotations }}
@@ -12,7 +12,7 @@ metadata:
     {{- end }}
   {{- end }}
   labels:
-{{ include "mautrix-hangouts.labels" . | indent 4 }}
+{{ include "mautrix-googlechat.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
 {{- if .Values.strategy }}
@@ -24,11 +24,11 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "mautrix-hangouts.selectorLabels" . | nindent 6 }}
+      {{- include "mautrix-googlechat.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "mautrix-hangouts.selectorLabels" . | nindent 8 }}
+        {{- include "mautrix-googlechat.selectorLabels" . | nindent 8 }}
       {{- if $podAnnotations }}
       annotations:
         {{- range $key, $value := $podAnnotations }}
@@ -40,7 +40,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ template "mautrix-hangouts.serviceAccountName" . }}
+      serviceAccountName: {{ template "mautrix-googlechat.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.dnsConfig }}
@@ -59,12 +59,6 @@ spec:
             - |-
               set -ex
               cp /config/*.yaml /data/
-              {{- if .Values.uid }}
-              chown {{.Values.uid}}:{{.Values.gid}} -R /data
-              {{- end }}
-          env:
-            - { name: UID, value: {{ .Values.uid | toString | quote }} }
-            - { name: GID, value: {{ .Values.gid | toString | quote }} }
           volumeMounts:
             - name: data
               mountPath: /data
@@ -80,17 +74,18 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ tpl .Values.image.tag . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - python3
+            - -m
+            - mautrix_googlechat
+            - -c
+            - /data/config.yaml
           ports:
             - name: http
               containerPort: {{ required "need config.appservice.port" .Values.config.appservice.port }}
               protocol: TCP
           env:
-            {{- if .Values.uid }}
-            - { name: UID, value: {{ .Values.uid | toString | quote }} }
-            - { name: GID, value: {{ .Values.gid | toString | quote }} }
-            {{- else }}
             []
-            {{- end }}
           livenessProbe:
             httpGet:
               path: /_matrix/mau/live
@@ -115,13 +110,10 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            {{- if .Values.uid }}
             - name: data
               mountPath: /data
-            {{- else }}
             - name: config
               mountPath: /data
-            {{- end }}
             - name: logs
               mountPath: /logs
       {{- with .Values.nodeSelector }}
@@ -139,7 +131,7 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ include "mautrix-hangouts.fullname" . }}
+            secretName: {{ include "mautrix-googlechat.fullname" . }}
         - name: data
           emptyDir: {}
         - name: logs
