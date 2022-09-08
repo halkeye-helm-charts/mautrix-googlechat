@@ -10,7 +10,7 @@ strategy:
 
 image:
   repository: dock.mau.dev/mautrix/googlechat
-  tag: latest
+  tag: "{{ .Chart.AppVersion }}"
   pullPolicy: Always
 
 imagePullSecrets: []
