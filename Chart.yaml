@@ -1,7 +1,7 @@
 apiVersion: v2
 type: application
 appVersion: v0.3.3
-version: 1.0.3
+version: 1.0.4
 name: mautrix-googlechat
 description: A Matrix-Hangouts puppeting bridge (Now externally called mautrix-googlechat)
 keywords:
@@ -19,7 +19,7 @@ maintainers:
     email: helm@gavinmogan.com
 annotations:
   artifacthub.io/changes: |
-    - fix: update values to match the actual defaults now: ([82b6cda813935097cafd2bdfe8801e8bc0f4de13](https://github.com/halkeye-helm-charts/mautrix-googlechat/commit/82b6cda813935097cafd2bdfe8801e8bc0f4de13))
+    - fix: don't include node_modules in helm packages: ([7893ea85118f9e2a2e12ec7987a663058775b59b](https://github.com/halkeye-helm-charts/mautrix-googlechat/commit/7893ea85118f9e2a2e12ec7987a663058775b59b))
   artifacthub.io/containsSecurityUpdates: 'false'
   artifacthub.io/images: |
     - name: mautrix-googlechat
