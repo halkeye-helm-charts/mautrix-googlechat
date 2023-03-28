@@ -1,6 +1,6 @@
 apiVersion: v2
 type: application
-appVersion: v0.3.3
+appVersion: "v0.3.3"
 version: 1.0.4
 name: mautrix-googlechat
 description: A Matrix-Hangouts puppeting bridge (Now externally called mautrix-googlechat)
