@@ -23,4 +23,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: 'false'
   artifacthub.io/images: |
     - name: mautrix-googlechat
-      image: "dock.mau.dev/mautrix/googlechat:v0.4.0"
+      image: "dock.mau.dev/mautrix/googlechat:v0.5.1"
